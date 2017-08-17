@@ -36,32 +36,32 @@ def dist_of_charging_vs_not():
     ax.plot(x_plot, kde_plot, label="KDE")
     ax.plot(x_plot[peak_indices], kde_plot[peak_indices], 'rX', label="Local Maxima")
 
-    text_string = "Energy $\Delta$ = {0}".format(np.round(x_plot[peak_indices[0]], 2))
+    text_string = "Power $\Delta$ = {0}".format(np.round(x_plot[peak_indices[0]], 2))
     ax.text(x_plot[peak_indices[0]], kde_plot[peak_indices[0]] + 0.02, text_string,
             fontdict = {"ha": "center", "color": "r"})
 
-    text_string = "Energy $\Delta$ = {0}".format(np.round(x_plot[peak_indices[1]], 2))
+    text_string = "Power $\Delta$ = {0}".format(np.round(x_plot[peak_indices[1]], 2))
     ax.text(x_plot[peak_indices[1]], kde_plot[peak_indices[1]] + 0.02, text_string,
             fontdict = {"ha": "center", "color": "r"})
 
     ax.set_xticks(np.arange(0,5,0.2))
     ax.set_xlim(0.7,3.4)
     # ax.set_xlim(0.7,3.6)
-    ax.set_xlabel("Average Increase in Energy Use While Charging", fontsize=20)
+    ax.set_xlabel("Average Increase in Power Use While Charging", fontsize=20)
 
     ax.set_yticks(np.arange(0,1.1,0.1))
     ax.set_ylim(0,1)
     ax.set_ylabel("Probablity Density", fontsize=20)
 
     ax.tick_params(axis='both', which='major', labelsize=15)
-    ax.set_title("Difference in Energy Consumption While Charging", fontsize=25)
+    ax.set_title("Difference in Power Usage While Charging", fontsize=25)
 
     ax.legend(fontsize=20, loc="upper left")
     plt.tight_layout()
     plt.savefig("images/eda/dist_of_charging_vs_not.png")
     fig.show()
 
-def average_energy_use(days=None, save_figure=False):
+def average_power_usage(days=None, save_figure=False):
     energy = np.mean(feature_matrix, axis=0)
     car_energy = np.mean(electric_car_features, axis=0)
     no_car_energy = np.mean(no_electric_car_features, axis=0)
@@ -89,8 +89,8 @@ def average_energy_use(days=None, save_figure=False):
     ax.set_xticks(np.arange(days[0], days[1]+2), minor=True)
     ax.xaxis.grid(True, which="minor")
     ax.xaxis.grid(False, which="major")
-    ax.set_ylabel("Energy", fontsize=20)
-    ax.set_title("Average Energy Use", fontsize=25)
+    ax.set_ylabel("Power", fontsize=20)
+    ax.set_title("Average Power Usage: Day {0} to Day {1}".format(days[0]+1, days[1]+1), fontsize=25)
 
     ax.tick_params(axis='both', which='major', labelsize=15)
 
@@ -98,11 +98,11 @@ def average_energy_use(days=None, save_figure=False):
 
     plt.tight_layout()
     if save_figure:
-        fig_name = "images/eda/average_energy_day{0}_to_day{1}.png".format(days[0]+1, days[1]+1)
+        fig_name = "images/eda/average_power_day{0}_to_day{1}.png".format(days[0]+1, days[1]+1)
         plt.savefig(fig_name)
     fig.show()
 
-def single_house_energy_use(house, days=None, save_figure=False):
+def single_house_power_usage(house, days=None, save_figure=False):
     house_id = features["House ID"][house].astype(int)
     energy = feature_matrix[house, :]
     charges = label_matrix[house, :]
@@ -125,25 +125,25 @@ def single_house_energy_use(house, days=None, save_figure=False):
     fig = plt.figure(figsize=(15,10))
     ax = fig.add_subplot(111)
 
-    ax.plot(time[increments[na:nb]], energy[na:nb], label="Energy Consumption")
+    ax.plot(time[increments[na:nb]], energy[na:nb], label="Power Usage")
     ax.plot(time[charge_ab], energy[charge_ab], 'o', label="Charge Points")
 
     ax.set_xlabel("Time (Days)", fontsize=20)
     ax.set_xticks(np.arange(days[0], days[1]+2), minor=True)
     ax.xaxis.grid(True, which="minor")
     ax.xaxis.grid(False, which="major")
-    ax.set_ylabel("Energy", fontsize=20)
-    ax.set_title("House {0} Energy Consumption".format(house_id), fontsize=25)
+    ax.set_ylabel("Power", fontsize=20)
+    ax.set_title("House {0} Power Usage: Day {1} to Day {2}".format(house_id, days[0]+1, days[1]+1), fontsize=25)
     ax.tick_params(axis='both', which='major', labelsize=15)
     ax.legend(fontsize=20)
 
     plt.tight_layout()
     if save_figure:
-        fig_name = "images/eda/house_{0}_energy_day{1}_to_day{2}.png".format(house_id, days[0]+1, days[1]+1)
+        fig_name = "images/eda/house_{0}_power_day{1}_to_day{2}.png".format(house_id, days[0]+1, days[1]+1)
         plt.savefig(fig_name)
     fig.show()
 
-def compare_ave_energy_use_to_cars_charging():
+def compare_ave_power_use_to_cars_charging():
     fig = plt.figure(figsize=(15,10))
     ax1 = fig.add_subplot(111)
 
@@ -151,7 +151,7 @@ def compare_ave_energy_use_to_cars_charging():
     time = increments/48.
     ax1.plot(time, np.mean(feature_matrix, axis=0), color="blue")
     ax1.set_xlabel("Time (Days)", fontsize=20, color="black")
-    ax1.set_ylabel("Average Energy Use", fontsize=20, color="blue")
+    ax1.set_ylabel("Average Power Usage", fontsize=20, color="blue")
     ax1.tick_params(axis='y', which='major', labelsize=15, colors="blue")
     ax1.tick_params(axis='x', which='major', labelsize=15, colors="black")
     ax1.yaxis.grid(False, which="both")
@@ -167,10 +167,10 @@ def compare_ave_energy_use_to_cars_charging():
     ax2.yaxis.grid(False, which="both")
     ax2.set_xlim(0,60)
 
-    ax1.set_title("Average Energy Use Compared to Number of Cars Charging", fontsize=25)
+    ax1.set_title("Average Power Usage Compared to Number of Cars Charging", fontsize=25)
 
     plt.tight_layout()
-    plt.savefig("images/eda/average_energy_cars_charging.png")
+    plt.savefig("images/eda/average_power_cars_charging.png")
     fig.show()
 
 if __name__ == '__main__':
@@ -195,9 +195,12 @@ if __name__ == '__main__':
     no_electric_car_labels = label_matrix[houses_without_electric_cars, :]
 
     # dist_of_charging_vs_not()
-    # average_energy_use(days=[42,59], save_figure=True)
-    # single_house_energy_use(houses_with_electric_cars[0], [0,20], save_figure=True)
-    # single_house_energy_use(houses_with_electric_cars[0], [21,41], save_figure=True)
-    # single_house_energy_use(houses_with_electric_cars[0], [42,59], save_figure=True)
+    # compare_ave_power_use_to_cars_charging()
+    # average_power_usage(days=None, save_figure=True)
+    # average_power_usage(days=[0,20], save_figure=True)
+    # average_power_usage(days=[21,41], save_figure=True)
+    # average_power_usage(days=[42,59], save_figure=True)
 
-    compare_ave_energy_use_to_cars_charging()
+    single_house_power_usage(houses_with_electric_cars[2], [0,20], save_figure=False)
+    single_house_power_usage(houses_with_electric_cars[2], [21,41], save_figure=False)
+    single_house_power_usage(houses_with_electric_cars[2], [42,59], save_figure=False)
