@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import calendar
 
-indices = np.arange(2880)
-day_nums = indices/48
+increments = np.arange(2880)
+day_nums = increments/48
 day_indices = (4 + day_nums)%7
 day_names = np.array( [list(calendar.day_abbr)[n] for n in day_indices] )
 weekend = np.array( [1 if day in ["Sat", "Sun"] else 0 for day in day_names] )
