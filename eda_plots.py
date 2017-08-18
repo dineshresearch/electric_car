@@ -6,6 +6,7 @@ from matplotlib.ticker import AutoMinorLocator
 import seaborn as sns
 import peakutils
 from sklearn.preprocessing import StandardScaler
+import calendar
 
 sns.set_style("whitegrid")
 
@@ -61,7 +62,7 @@ def dist_of_charging_vs_not():
     plt.savefig("images/eda/dist_of_charging_vs_not.png")
     fig.show()
 
-def average_power_usage(days=None, save_figure=False):
+def average_power_usage(days=None, save_figure=False, show_day_labels=False):
     energy = np.mean(feature_matrix, axis=0)
     car_energy = np.mean(electric_car_features, axis=0)
     no_car_energy = np.mean(no_electric_car_features, axis=0)
@@ -85,7 +86,16 @@ def average_power_usage(days=None, save_figure=False):
     ax.plot(time[increments[na:nb]], car_energy[increments[na:nb]], label="Houses w/ Electric Car")
     ax.plot(time[increments[na:nb]], no_car_energy[increments[na:nb]], label="Houses w/o Electric Car")
 
-    ax.set_xlabel("Time (Days)", fontsize=20)
+    if show_day_labels:
+        xticks = np.arange(days[0], days[1] + 1)
+        ax.set_xticks(0.5 + xticks)
+        day_names = [list(calendar.day_abbr)[n] for n in (4 + xticks)%7]
+        xlabels = ["{0} - {1}".format(1 + xticks[n], day_names[n]) for n in xrange(len(xticks))]
+        ax.set_xticklabels(xlabels, rotation = 90)
+        ax.set_xlim(days[0], days[1]+1)
+        ax.set_xlabel("Time (Day Number - Day Of Week)", fontsize=20)
+    else:
+        ax.set_xlabel("Time (Days)", fontsize=20)
     ax.set_xticks(np.arange(days[0], days[1]+2), minor=True)
     ax.xaxis.grid(True, which="minor")
     ax.xaxis.grid(False, which="major")
@@ -197,10 +207,10 @@ if __name__ == '__main__':
     # dist_of_charging_vs_not()
     # compare_ave_power_use_to_cars_charging()
     # average_power_usage(days=None, save_figure=True)
-    # average_power_usage(days=[0,20], save_figure=True)
-    # average_power_usage(days=[21,41], save_figure=True)
-    # average_power_usage(days=[42,59], save_figure=True)
+    # average_power_usage(days=[0,20], save_figure=False, show_day_labels=True)
+    # average_power_usage(days=[21,41], save_figure=True, show_day_labels=True)
+    average_power_usage(days=[42,59], save_figure=True, show_day_labels=True)
 
-    single_house_power_usage(houses_with_electric_cars[2], [0,20], save_figure=False)
-    single_house_power_usage(houses_with_electric_cars[2], [21,41], save_figure=False)
-    single_house_power_usage(houses_with_electric_cars[2], [42,59], save_figure=False)
+    # single_house_power_usage(houses_with_electric_cars[2], [0,20], save_figure=False)
+    # single_house_power_usage(houses_with_electric_cars[2], [21,41], save_figure=False)
+    # single_house_power_usage(houses_with_electric_cars[2], [42,59], save_figure=False)

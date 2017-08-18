@@ -41,11 +41,14 @@ over smaller time intervals.  The next three plots once again show the average
 power for all houses, houses with electric cars, and houses without electric cars,
 but they are broken up into periods of roughly three weeks.  
 
-The plot describing day 1 to day 21 is shown first.  Notice that the first three days
-all show spikes in power usage for houses with electric vehicles.  This most likely
-indicates that day 1 was a Friday and also a holiday.  The remaining four days with
-power spikes on houses with electric vehicles would fall on Saturdays and Sundays
-under the assumption that day 1 is a Friday.
+The plot describing day 1 to day 21 is shown first.  It is not explicitly
+mentioned that day 1 is a Friday, but it is labeled as such in this plot.
+This is because if it is assumed that day 1 is a Friday, then all the days with
+power spikes would fall on weekend days, with the exception of day 1, which was
+probably a holiday.  The idea that people charge their electric vehicles at a
+higher rate on the weekends makes sense intuitively because people tend to spend
+more time at home on the weekends, and it stands to reason that people charge their
+electric vehicles when they are home.
 
 <img src="images/eda/average_power_day1_to_day21.png" width="1000" height = "600" />
 
@@ -58,7 +61,7 @@ also fall on weekends assuming that day 1 is a Friday.
 
 <img src="images/eda/average_power_day22_to_day42.png" width="1000" height = "600" />
 
-The final average power usage plot showing day 43 to 60 continues to support the
+The final average power usage plot showing day 43 to day 60 continues to support the
 weekend power spike hypothesis.  Eighteen days are shown here (as opposed to the
 21 days shown in the previous two plots) with six of them showing power spikes,
 all of which occur on weekends following the assumption that day 1 is a Friday.
