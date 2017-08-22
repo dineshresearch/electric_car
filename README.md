@@ -36,8 +36,8 @@ all the houses and the houses with electric cars.
 <img src="images/eda/average_power_day1_to_day60.png" width="1000" height = "600" />
 
 Since there are so many time intervals in this data set (2,880 half hour intervals),
-the behavior of the average power consumption is easier to describe when examined
-over smaller time intervals.  The next three plots once again show the average
+the behavior of the average power consumption is easier to understand when broken
+up into smaller time frames.  The next three plots once again show the average
 power for all houses, houses with electric cars, and houses without electric cars,
 but they are broken up into periods of roughly three weeks.  
 
@@ -68,15 +68,71 @@ all of which occur on weekends following the assumption that day 1 is a Friday.
 Breaking the average power usage plots into three periods of roughly three weeks
 provides strong evidence to support the hypothesis that the first day of power usage
 shown in the data is a Friday, which happened to be a holiday, and that people
-tend to charge their electric vehicles in higher volume on the weekends.
+tend to charge their electric vehicles in higher volume when they are home on the weekends.
 
 <img src="images/eda/average_power_day43_to_day60.png" width="1000" height = "600" />
-<img src="images/eda/house_11647239_power_day1_to_day21.png" width="1000" height = "600" />
-<img src="images/eda/house_11647239_power_day22_to_day42.png" width="1000" height = "600" />
-<img src="images/eda/house_11647239_power_day43_to_day60.png" width="1000" height = "600" />
 <img src="images/eda/dist_of_charging_vs_not.png" width="1000" height = "600" />
 
 ## Model Building
+#### Feature Engineering
+The primary goal of this project is to calculate the probability
+that an electric car is charging at every time interval for all the houses in
+the test data.  Six features in addition to the power readings are constructed
+for each house at each time interval which are discussed in detail below.  
+Suppose there are N houses with power readings at M time intervals that exist
+within an NxM matrix.  The training data contains another NxM matrix with the
+binary labels of whether or not an electric vehicle is charging for the same N
+houses at the same M time intervals.  Since there are seven total features
+(the power reading and the six engineered features) at each interval, the feature
+matrix used in the machine learning model will have NxM rows and seven columns.
+The label matrix is then transformed into NxM target vector.  This process takes
+place in the file, <a href="https://github.com/jbhersch/electric_car/blob/master/feature_engineering.py">feature_engineering.py</a>.
+
+Examining the power plots for individual houses with the charge points labeled
+reveals that oftentimes charging occurs above some power threshold that can be
+visually identified by a spike in power.  However, it also happens fairly
+frequently that charge points exist before and/or after a power spike occurs.  
+This most likely occurs when the electric vehicles are plugged in at the end
+of a time interval or unplugged at the beginning of a time interval.  As a result,
+these time intervals are labeled as charge points because the vehicles are charging,
+but they are not charging long enough within the interval to contribute a significant
+change in the overall power reading.  As a result, examining a numerical approximation
+to the first derivative can capture significant increases and decreases at time intervals
+where the vehicles are not charging long enough to significantly change the power
+reading itself.  In order to capture this behavior, the first derivative at each
+power reading is approximated using three different methods: the forward derivative,
+the backward derivative, and the inside derivative.  
+
+Another thought I had was to examine the second derivative of the power reading.
+For a continuous function, inflection points occur when the second derivative is
+equal to zero.  The relevant property of inflection points for the purpose of
+this model is that inflection points identify a shift in concavity, which in
+this case, could signal that the status of an electric vehicle charging might be
+in close proximity to time intervals with second derivatives that are close to
+zero.  Clearly these power readings are not continuous functions, but approximating
+the second derivative numerically might provide a means for the machine learning
+models to identify inflection points and better predict the probability that
+an electric vehicle is charging in the test data.  Similar to the case of the
+first derivative, the second derivatives are approximated using the forward,
+backward, and inside methods, which are formally defined below:
+
+##### Forward Derivatives
+dp1_forward[n] = p[n+1] - p[n]
+
+dp2_forward[n] = dp1_forward[n+1] - dp1_forward[n]
+
+##### Backward Derivatives
+dp1_back[n] = p[n] - p[n-1]
+
+dp2_back[n] = dp1_back[n] - dp1_back[n-1]
+
+##### Inside Derivatives
+dp1_inside[n] = (p[n+1] - p[n-1])/2
+
+dp2_inside[n] = (dp1_inside[n+1] - dp1_inside[n-1])/2
+
+
+
 
 ## Model Performance
 <img src="images/model_metrics/logistic_regression_model_metrics.png" width="1000" height = "600" />

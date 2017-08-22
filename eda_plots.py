@@ -7,6 +7,7 @@ import seaborn as sns
 import peakutils
 from sklearn.preprocessing import StandardScaler
 import calendar
+from sklearn.neighbors import NearestNeighbors
 
 sns.set_style("whitegrid")
 
@@ -112,7 +113,7 @@ def average_power_usage(days=None, save_figure=False, show_day_labels=False):
         plt.savefig(fig_name)
     fig.show()
 
-def single_house_power_usage(house, days=None, save_figure=False):
+def single_house_power_usage(house, days=None, save_figure=False, show_day_labels=False):
     house_id = features["House ID"][house].astype(int)
     energy = feature_matrix[house, :]
     charges = label_matrix[house, :]
@@ -138,7 +139,16 @@ def single_house_power_usage(house, days=None, save_figure=False):
     ax.plot(time[increments[na:nb]], energy[na:nb], label="Power Usage")
     ax.plot(time[charge_ab], energy[charge_ab], 'o', label="Charge Points")
 
-    ax.set_xlabel("Time (Days)", fontsize=20)
+    if show_day_labels:
+        xticks = np.arange(days[0], days[1] + 1)
+        ax.set_xticks(0.5 + xticks)
+        day_names = [list(calendar.day_abbr)[n] for n in (4 + xticks)%7]
+        xlabels = ["{0} - {1}".format(1 + xticks[n], day_names[n]) for n in xrange(len(xticks))]
+        ax.set_xticklabels(xlabels, rotation = 90)
+        ax.set_xlim(days[0], days[1]+1)
+        ax.set_xlabel("Time (Day Number - Day Of Week)", fontsize=20)
+    else:
+        ax.set_xlabel("Time (Days)", fontsize=20)
     ax.set_xticks(np.arange(days[0], days[1]+2), minor=True)
     ax.xaxis.grid(True, which="minor")
     ax.xaxis.grid(False, which="major")
@@ -203,14 +213,33 @@ if __name__ == '__main__':
     no_electric_car_features = feature_matrix[houses_without_electric_cars, :]
     electric_car_labels = label_matrix[houses_with_electric_cars, :]
     no_electric_car_labels = label_matrix[houses_without_electric_cars, :]
+    electric_car_average = np.mean(electric_car_features,axis=0)
+    no_electric_car_average = np.mean(no_electric_car_features,axis=0)
+    all_average = np.mean(feature_matrix,axis=0)
+
+    car_neighbors = NearestNeighbors(n_neighbors = 5)
+    car_neighbors.fit(electric_car_features)
+    car_nearest = car_neighbors.kneighbors(electric_car_average.reshape(1,-1))
+
+    no_car_neighbors = NearestNeighbors(n_neighbors = 5)
+    no_car_neighbors.fit(no_electric_car_features)
+    no_car_nearest = no_car_neighbors.kneighbors(no_electric_car_average.reshape(1,-1))
+
+    neighbors = NearestNeighbors(n_neighbors = 5)
+    neighbors.fit(feature_matrix)
+    nearest = neighbors.kneighbors(all_average.reshape(1,-1))
+    # car_nearest = neighbors.kneighbors(electric_car_average.reshape(1,-1))
+    # no_car_nearest = neighbors.kneighbors(no_electric_car_average.reshape(1,-1))
 
     # dist_of_charging_vs_not()
     # compare_ave_power_use_to_cars_charging()
     # average_power_usage(days=None, save_figure=True)
     # average_power_usage(days=[0,20], save_figure=False, show_day_labels=True)
     # average_power_usage(days=[21,41], save_figure=True, show_day_labels=True)
-    average_power_usage(days=[42,59], save_figure=True, show_day_labels=True)
+    # average_power_usage(days=[42,59], save_figure=True, show_day_labels=True)
 
-    # single_house_power_usage(houses_with_electric_cars[2], [0,20], save_figure=False)
+    # single_house_power_usage(houses_with_electric_cars[390], [0,20], save_figure=False, show_day_labels=True)
+    # single_house_power_usage(houses_with_electric_cars[5], [0,20], save_figure=False, show_day_labels=True)
+    # single_house_power_usage(houses_with_electric_cars[3], [0,20], save_figure=False, show_day_labels=True)
     # single_house_power_usage(houses_with_electric_cars[2], [21,41], save_figure=False)
     # single_house_power_usage(houses_with_electric_cars[2], [42,59], save_figure=False)
