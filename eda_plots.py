@@ -13,6 +13,14 @@ sns.set_style("whitegrid")
 
 
 def dist_of_charging_vs_not():
+    '''
+    INPUT:
+        - x: x-coordinates (ndarray)
+        - y: y-coordinates (ndarray)
+        - pad: number of data points to pad the x, y vectors with (int)
+        - thresh: threshold used for noise removal (float)
+    OUTPUT: None
+    '''
     mean_energy_when_charging = np.zeros(electric_car_labels.shape[0])
     mean_energy_not_charging = np.zeros(electric_car_labels.shape[0])
 
@@ -64,6 +72,14 @@ def dist_of_charging_vs_not():
     fig.show()
 
 def average_power_usage(days=None, save_figure=False, show_day_labels=False):
+    '''
+    INPUT:
+        - x: x-coordinates (ndarray)
+        - y: y-coordinates (ndarray)
+        - pad: number of data points to pad the x, y vectors with (int)
+        - thresh: threshold used for noise removal (float)
+    OUTPUT: None
+    '''
     energy = np.mean(feature_matrix, axis=0)
     car_energy = np.mean(electric_car_features, axis=0)
     no_car_energy = np.mean(no_electric_car_features, axis=0)
@@ -114,6 +130,14 @@ def average_power_usage(days=None, save_figure=False, show_day_labels=False):
     fig.show()
 
 def single_house_power_usage(house, days=None, save_figure=False, show_day_labels=False):
+    '''
+    INPUT:
+        - x: x-coordinates (ndarray)
+        - y: y-coordinates (ndarray)
+        - pad: number of data points to pad the x, y vectors with (int)
+        - thresh: threshold used for noise removal (float)
+    OUTPUT: None
+    '''
     house_id = features["House ID"][house].astype(int)
     energy = feature_matrix[house, :]
     charges = label_matrix[house, :]
@@ -164,6 +188,14 @@ def single_house_power_usage(house, days=None, save_figure=False, show_day_label
     fig.show()
 
 def compare_ave_power_use_to_cars_charging():
+    '''
+    INPUT:
+        - x: x-coordinates (ndarray)
+        - y: y-coordinates (ndarray)
+        - pad: number of data points to pad the x, y vectors with (int)
+        - thresh: threshold used for noise removal (float)
+    OUTPUT: None
+    '''
     fig = plt.figure(figsize=(15,10))
     ax1 = fig.add_subplot(111)
 

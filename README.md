@@ -116,6 +116,8 @@ an electric vehicle is charging in the test data.  Similar to the case of the
 first derivative, the second derivatives are approximated using the forward,
 backward, and inside methods, which are formally defined below:
 
+Let p[n] be the power reading for an arbitrary house at interval n.
+
 ##### Forward Derivatives
 dp1_forward[n] = p[n+1] - p[n]
 
