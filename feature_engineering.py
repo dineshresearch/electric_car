@@ -101,7 +101,7 @@ def generate_output_df(y_vector, X, ids, columns):
     INPUT:
         - y_vector: vector containing the probabilities of an electric vehicle
             to be charging for a set of houses at the given time intervals (ndarray)
-        - X: table where the rows contain power readings (ndarray)
+        - X: table where the rows contain power readings for each house (ndarray)
         - ids: list of house ids contained in X (pandas Series)
         - columns: list of column names for the output data frame (list)
     OUTPUT:

@@ -8,8 +8,13 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_score, recall_score
 
 if __name__ == '__main__':
-    logistic_regression = LogisticRegression().fit(X_train_transform, y_train_transform)
+    lr = LogisticRegression().fit(X_train_transform, y_train_transform)
     # logistic_regression = LogisticRegression(class_weight="balanced").fit(X_train_transform, y_train_transform)
 
-    print "Train Accuracy: {0}".format(logistic_regression.score(X_train_transform, y_train_transform))
-    print "Test Accuracy: {0}".format(logistic_regression.score(X_test_transform, y_test_transform))
+    print "Train Accuracy: {0}".format(lr.score(X_train_transform, y_train_transform))
+    print "Test Accuracy: {0}".format(lr.score(X_test_transform, y_test_transform))
+
+    from feature_engineering2 import *
+    lr2 = LogisticRegression().fit(X_train_transform, y_train_transform)
+    print "Train Accuracy: {0}".format(lr2.score(X_train_transform, y_train_transform))
+    print "Test Accuracy: {0}".format(lr2.score(X_test_transform, y_test_transform))

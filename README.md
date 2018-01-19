@@ -71,6 +71,20 @@ shown in the data is a Friday, which happened to be a holiday, and that people
 tend to charge their electric vehicles in higher volume when they are home on the weekends.
 
 <img src="images/eda/average_power_day43_to_day60.png" width="1000" height = "600" />
+
+
+This next plot only examines the houses in the training set where electric vehicles
+are present.  The distribution of the difference between the average power reading
+while an electric vehicle is charging and the overall average power reading for each
+house with an electric vehicle is shown below.  This is an interesting plot because
+there are two clear local maximums at power increases of 1.32 and 2.58 power units, which are
+labeled with red x's.  I believe there are two likely explanations for the presence
+of these two maximums.  The first explanation is that there are two different types
+of electric vehicles present, one of which requires roughly 1.32 additional power
+units to charge and the other requires roughly 2.58 additional power units.  The
+second explanation is that many of these houses have two of the same type of electric vehicle.  The reason
+this is a likely scenario is that the increase of 2.58 power units is approximately
+twice the increase of 1.32 power units.  
 <img src="images/eda/dist_of_charging_vs_not.png" width="1000" height = "600" />
 
 ## Model Building
@@ -137,8 +151,25 @@ dp2_inside[n] = (dp1_inside[n+1] - dp1_inside[n-1])/2
 
 
 ## Model Performance
+This data is highly imbalanced.  Electric vehicles are only charging 2.5% of the
+time.  As a result, a model that is highly accurate is not necessarily a good model
+because it might never predict that an electric vehicle is charging and still be
+97.5% accurate.  Therefore, several model metrics other than accuracy must be
+examined to truly determine the quality of the model.  The metrics that I decided
+to examine in addition to accuracy are precision, recall, F1 score, and the Matthews
+correlation coefficient (MCC).
+
+#### Logistic Regression
 <img src="images/model_metrics/logistic_regression_model_metrics.png" width="1000" height = "600" />
+
+#### Linear Discriminant Analysis
 <img src="images/model_metrics/lda_model_metrics.png" width="1000" height = "600" />
+
+#### Gradient Boost
 <img src="images/model_metrics/gradient_boost_model_metrics.png" width="1000" height = "600" />
+
+#### Random Forest
 <img src="images/model_metrics/random_forest_model_metrics.png" width="1000" height = "600" />
+
+#### ROC Curve
 <img src="images/model_metrics/roc_curve.png" width="1000" height = "600" />
